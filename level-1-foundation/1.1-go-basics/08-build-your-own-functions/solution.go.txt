@@ -1,0 +1,16 @@
+package main
+
+import "fmt"
+
+func greet(name string) string {
+	return "Halo, " + name
+}
+
+func double(n int) int {
+	return n * 2
+}
+
+func main() {
+	fmt.Println(greet("Go"))
+	fmt.Println(double(21))
+}

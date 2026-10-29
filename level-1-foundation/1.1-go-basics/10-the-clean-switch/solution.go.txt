@@ -1,0 +1,30 @@
+package main
+
+import "fmt"
+
+func dayType(day string) string {
+	switch day {
+	case "senin", "selasa", "rabu", "kamis", "jumat":
+		return "Hari Kerja"
+	case "sabtu", "minggu":
+		return "Akhir Pekan"
+	default:
+		return "Tidak Dikenal"
+	}
+}
+
+func categorizeAge(age int) string {
+	switch {
+	case age < 13:
+		return "Anak-anak"
+	case age <= 19:
+		return "Remaja"
+	default:
+		return "Dewasa"
+	}
+}
+
+func main() {
+	fmt.Println(dayType("sabtu"))
+	fmt.Println(categorizeAge(17))
+}

@@ -1,0 +1,19 @@
+package main
+
+import "fmt"
+
+func formatProduct(name string, price float64, stock int) string {
+	return fmt.Sprintf("Product: %q | Price: $%.2f | Stock: %d", name, price, stock)
+}
+
+func describeValue(val int) string {
+	return fmt.Sprintf("Type: %T | Padded: %04d", val, val)
+}
+
+func main() {
+	p := formatProduct("Mechanical Keyboard", 89.9, 15)
+	fmt.Println(p)
+
+	d := describeValue(42)
+	fmt.Println(d)
+}

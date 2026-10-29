@@ -1,0 +1,32 @@
+package main
+
+import "fmt"
+
+func sumEven(limit int) int {
+	total := 0
+	for i := 1; i <= limit; i++ {
+		if i%2 != 0 {
+			continue
+		}
+		total += i
+	}
+	return total
+}
+
+func countUntil(target int) int {
+	count := 0
+	steps := 0
+	for {
+		count += 3
+		steps++
+		if count >= target {
+			break
+		}
+	}
+	return steps
+}
+
+func main() {
+	fmt.Println(sumEven(10))
+	fmt.Println(countUntil(10))
+}

@@ -1,0 +1,24 @@
+package main
+
+import "fmt"
+
+func toByte(r rune) (byte, bool) {
+	if r <= 255 {
+		return byte(r), true
+	}
+	return 0, false
+}
+
+func addInt8(a int8, b int8) int8 {
+	return a + b
+}
+
+func main() {
+	b1, ok1 := toByte('A')
+	fmt.Println(b1, ok1)
+
+	b2, ok2 := toByte('世')
+	fmt.Println(b2, ok2)
+
+	fmt.Println(addInt8(127, 1))
+}

@@ -1,0 +1,23 @@
+package main
+
+import (
+	"fmt"
+	"strings"
+	"unicode/utf8"
+)
+
+func countBytesAndRunes(text string) (int, int) {
+	return len(text), utf8.RuneCountInString(text)
+}
+
+func normalizeText(text string) string {
+	return strings.ToLower(strings.TrimSpace(text))
+}
+
+func main() {
+	b, r := countBytesAndRunes("Go 🚀")
+	fmt.Println(b, r)
+
+	cleaned := normalizeText("  Belajar GOLANG  ")
+	fmt.Println(cleaned)
+}

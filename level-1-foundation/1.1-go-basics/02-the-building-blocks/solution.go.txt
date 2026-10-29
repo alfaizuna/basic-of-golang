@@ -1,0 +1,10 @@
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println(25)
+	fmt.Println(175.5)
+	fmt.Println("Go")
+	fmt.Println(true)
+}

@@ -1,0 +1,12 @@
+package main
+
+import "fmt"
+
+func main() {
+	var app string = "Server"
+	port := 8080
+	port = 9090
+
+	fmt.Println(app)
+	fmt.Println(port)
+}

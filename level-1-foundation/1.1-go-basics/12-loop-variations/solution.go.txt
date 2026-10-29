@@ -1,0 +1,35 @@
+package main
+
+import "fmt"
+
+func countVowels(text string) int {
+	total := 0
+	for _, char := range text {
+		switch char {
+		case 'a', 'i', 'u', 'e', 'o':
+			total++
+		}
+	}
+	return total
+}
+
+func findTarget(matrixSize int, targetSum int) (int, int) {
+	foundR, foundC := 0, 0
+SearchLoop:
+	for r := 1; r <= matrixSize; r++ {
+		for c := 1; c <= matrixSize; c++ {
+			if r+c == targetSum {
+				foundR = r
+				foundC = c
+				break SearchLoop
+			}
+		}
+	}
+	return foundR, foundC
+}
+
+func main() {
+	fmt.Println(countVowels("golang"))
+	r, c := findTarget(5, 7)
+	fmt.Println(r, c)
+}

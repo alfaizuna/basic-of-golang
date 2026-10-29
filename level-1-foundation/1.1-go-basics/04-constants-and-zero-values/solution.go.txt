@@ -1,0 +1,21 @@
+package main
+
+import "fmt"
+
+const MaxScore = 100
+
+const (
+	StatusDraft = iota
+	StatusPublished
+)
+
+func main() {
+	var defaultAttempts int
+	var isReady bool
+
+	fmt.Println(MaxScore)
+	fmt.Println(StatusDraft)
+	fmt.Println(StatusPublished)
+	fmt.Println(defaultAttempts)
+	fmt.Println(isReady)
+}

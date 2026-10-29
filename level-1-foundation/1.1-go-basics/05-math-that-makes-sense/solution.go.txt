@@ -1,0 +1,20 @@
+package main
+
+import "fmt"
+
+func main() {
+	totalItems := 7
+	bags := 2
+	price := 12.5
+	qty := 4
+
+	itemsPerBag := totalItems / bags
+	remainder := totalItems % bags
+	avgItems := float64(totalItems) / float64(bags)
+	totalPrice := price * float64(qty)
+
+	fmt.Println(itemsPerBag)
+	fmt.Println(remainder)
+	fmt.Println(avgItems)
+	fmt.Println(totalPrice)
+}
