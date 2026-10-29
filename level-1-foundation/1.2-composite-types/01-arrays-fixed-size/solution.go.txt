@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func modifyCopy(arr [3]int) [3]int {
+	arr[0] = 99
+	return arr
+}
+
+func main() {
+	scores := [3]int{10, 20, 30}
+	modified := modifyCopy(scores)
+	fmt.Println(scores)
+	fmt.Println(modified)
+}

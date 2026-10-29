@@ -91,6 +91,39 @@ func TestTransformToSlug(t *testing.T) {
 	}
 }
 
+func TestGenerateSlug(t *testing.T) {
+	tests := []struct {
+		title       string
+		wantSlug    string
+		wantErrText string
+	}{
+		{"  Belajar Go: Dasar #1 (Pemula)!  ", "belajar-go-dasar-1-pemula", ""},
+		{"Hello World", "hello-world", ""},
+		{"Go 1.26 Released!", "go-126-released", ""},
+		{"", "", "input text cannot be empty"},
+		{"   \t\n ", "", "input text cannot be empty"},
+		{"### ??? !!!", "", "no valid slug characters found"},
+	}
+
+	for _, tt := range tests {
+		got, err := GenerateSlug(tt.title)
+		if tt.wantErrText != "" {
+			if err == nil {
+				t.Errorf("GenerateSlug(%q) expected error %q, got nil", tt.title, tt.wantErrText)
+			} else if err.Error() != tt.wantErrText {
+				t.Errorf("GenerateSlug(%q) error = %q; want %q", tt.title, err.Error(), tt.wantErrText)
+			}
+		} else {
+			if err != nil {
+				t.Errorf("GenerateSlug(%q) unexpected error: %v", tt.title, err)
+			}
+			if got != tt.wantSlug {
+				t.Errorf("GenerateSlug(%q) = %q; want %q", tt.title, got, tt.wantSlug)
+			}
+		}
+	}
+}
+
 func TestMainOutput(t *testing.T) {
 	oldStdout := os.Stdout
 	r, w, err := os.Pipe()
@@ -112,7 +145,7 @@ func TestMainOutput(t *testing.T) {
 	os.Stdout = oldStdout
 	out := <-outC
 
-	expected := "Input: \"  Go 101: Belajar #1!  \"\nSlug:  \"go-101-belajar-1\""
+	expected := "Input: \"  Belajar Go: Dasar #1 (Pemula)!  \"\nSlug:  \"belajar-go-dasar-1-pemula\"\nError: no valid slug characters found"
 	actual := strings.TrimSpace(out)
 
 	if actual != expected {

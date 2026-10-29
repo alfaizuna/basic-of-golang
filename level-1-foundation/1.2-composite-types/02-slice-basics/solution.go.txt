@@ -1,0 +1,17 @@
+package main
+
+import "fmt"
+
+func sumSlice(numbers []int) int {
+	total := 0
+	for _, num := range numbers {
+		total += num
+	}
+	return total
+}
+
+func main() {
+	prices := []int{15, 25, 35, 45}
+	fmt.Println("Count:", len(prices))
+	fmt.Println("Total:", sumSlice(prices))
+}

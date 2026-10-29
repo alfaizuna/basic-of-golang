@@ -1,34 +1,28 @@
 ### Hint 1
-Awali fungsi `transformToSlug` dengan memanggil `cleanText(text)`. Kemudian lakukan perulangan pada string hasil pembersihan tersebut.
+Jangan lupa menambahkan `"errors"` pada bagian `import`:
+```go
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
+```
 
 ### Hint 2
-Bentuk fungsi `transformToSlug`:
+Bentuk fungsi `GenerateSlug`:
 ```go
-func transformToSlug(text string) string {
-	cleaned := cleanText(text)
-	var result string
-	inSeparator := false
-
-	for _, r := range cleaned {
-		if r == ' ' || r == '-' {
-			if !inSeparator && len(result) > 0 {
-				result += "-"
-				inSeparator = true
-			}
-		} else {
-			result += string(r)
-			inSeparator = false
-		}
+func GenerateSlug(title string) (string, error) {
+	if strings.TrimSpace(title) == "" {
+		return "", errors.New("input text cannot be empty")
 	}
-	return strings.Trim(result, "-")
+	slug := transformToSlug(title)
+	if slug == "" {
+		return "", errors.New("no valid slug characters found")
+	}
+	return slug, nil
 }
 ```
 
 ### Hint 3
 Di dalam fungsi `main()`:
-```go
-input := "  Go 101: Belajar #1!  "
-slug := transformToSlug(input)
-fmt.Printf("Input: %q\n", input)
-fmt.Printf("Slug:  %q\n", slug)
-```
+Panggil `GenerateSlug` untuk `title1` dan `title2`, lakukan pengecekan error dengan pola `if err != nil`, dan cetak output sesuai petunjuk pada `lesson.md`.

@@ -1,6 +1,6 @@
-# Slug Generator 3: Transform
+# Slug Generator 4: Ship It
 
-Here's the third step in building your CLI Slug Generator: transforming cleaned text into a URL-friendly slug by converting separators to dashes and collapsing duplicates.
+Here's the final step: packaging all stages into a robust `GenerateSlug` function with proper error handling and final end-to-end tests.
 
 ## Contoh
 ```go
@@ -10,68 +10,79 @@ Here's the third step in building your CLI Slug Generator: transforming cleaned 
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
 
-func collapseSeparators(input string) string {
-	var result string
-	inSpace := false
-
-	for _, r := range input {
-		if r == ' ' {
-			if !inSpace && len(result) > 0 {
-				result += "-"
-				inSpace = true
-			}
-		} else {
-			result += string(r)
-			inSpace = false
-		}
+func validateUsername(name string) (string, error) {
+	trimmed := strings.TrimSpace(name)
+	if trimmed == "" {
+		return "", errors.New("username cannot be empty")
 	}
-	return strings.Trim(result, "-")
+	return strings.ToLower(trimmed), nil
 }
 
 func main() {
-	sample := "  belajar   golang   dasar  "
-	fmt.Println("Result:", collapseSeparators(sample)) // belajar-golang-dasar
+	user, err := validateUsername("  Alfaizuna  ")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Username valid: %q\n", user)
+
+	_, err2 := validateUsername("   ")
+	if err2 != nil {
+		fmt.Println("Error:", err2)
+	}
 }
 ```
 
 ## Penjelasan
-- Slug URL harus memisahkan setiap kata dengan tanda strip (`-`), tanpa spasi atau strip ganda seperti `---`.
-- Teknik *flag boolean* (misalnya `inSeparator := false`) berguna untuk mendeteksi apakah kita sedang berada di dalam urutan pemisah, sehingga spasi/strip beruntun bisa diciutkan (*collapse*) menjadi satu strip saja.
-- Kondisi `len(result) > 0` mencegah strip ditambahkan di paling awal string.
-- Fungsi `strings.Trim(result, "-")` memotong sisa strip yang mungkin tertinggal di ujung awal atau akhir teks.
+- Di tahap akhir ini, kita merangkum seluruh logika ke dalam fungsi publik `GenerateSlug(title string) (string, error)`.
+- Menggunakan pola *guard clause* (pengecekan awal):
+  - Jika input kosong setelah di-`TrimSpace`, kembalikan error `"input text cannot be empty"`.
+  - Jika setelah ditransformasi menghasilkan slug kosong (misal input hanya berisi simbol tak valid), kembalikan error `"no valid slug characters found"`.
+  - Jika berhasil, kembalikan slug dan `nil`.
+- Pola idiomatik Go: selalu periksa `if err != nil` sebelum menggunakan hasil fungsi.
 
 ## >_ Exercise
 Buka file [main.go](file:///Users/alfaizuna/Documents/Projects/golang/basic-of-golang/level-1-foundation/1.1-go-basics/slug-generator/main.go):
-1. Tambahkan fungsi baru `transformToSlug(text string) string`:
-   - Mulai dengan memanggil `cleaned := cleanText(text)` untuk memperoleh teks yang sudah dibersihkan.
-   - Siapkan variabel penampung `var result string` dan *flag* `inSeparator := false`.
-   - Iterasi setiap karakter `r` pada `cleaned`:
-     - Jika `r == ' ' || r == '-'`:
-       - Jika `!inSeparator && len(result) > 0`, tambahkan `"-"` ke `result`, dan ubah `inSeparator = true`.
-     - Jika karakter alfanumerik biasa:
-       - Tambahkan karakter ke `result` (`result += string(r)`), dan set `inSeparator = false`.
-   - Kembalikan `strings.Trim(result, "-")`.
-2. Di dalam `func main()`:
+1. Tambahkan paket `"errors"` pada deklarasi `import` di bagian atas.
+2. Buat fungsi baru `GenerateSlug(title string) (string, error)`:
+   - Jika `strings.TrimSpace(title) == ""`:
+     - Kembalikan `"", errors.New("input text cannot be empty")`.
+   - Jalankan `slug := transformToSlug(title)`.
+   - Jika `slug == ""`:
+     - Kembalikan `"", errors.New("no valid slug characters found")`.
+   - Jika valid, kembalikan `slug, nil`.
+3. Di dalam `func main()`:
    - Ganti isi fungsi `main()` dengan:
      ```go
-     input := "  Go 101: Belajar #1!  "
-     slug := transformToSlug(input)
-     fmt.Printf("Input: %q\n", input)
-     fmt.Printf("Slug:  %q\n", slug)
+     title1 := "  Belajar Go: Dasar #1 (Pemula)!  "
+     slug1, err1 := GenerateSlug(title1)
+     if err1 != nil {
+         fmt.Println("Error:", err1)
+     } else {
+         fmt.Printf("Input: %q\nSlug:  %q\n", title1, slug1)
+     }
+
+     title2 := "### ??? !!!"
+     _, err2 := GenerateSlug(title2)
+     if err2 != nil {
+         fmt.Println("Error:", err2)
+     }
      ```
 
 Expected output:
 ```
-Input: "  Go 101: Belajar #1!  "
-Slug:  "go-101-belajar-1"
+Input: "  Belajar Go: Dasar #1 (Pemula)!  "
+Slug:  "belajar-go-dasar-1-pemula"
+Error: no valid slug characters found
 ```
 
 ## Hints
 Hints (0/3) — gunakan `/hint` untuk membuka satu per satu.
 
 ## Key Takeaway
-Transformasi slug menuntut penanganan karakter pemisah yang cermat. Menggunakan variabel status (*state flag*) saat iterasi memungkinkan kita menyatukan beberapa pemisah beruntun menjadi satu pemisah yang rapi.
+Selamat! Kamu telah membangun aplikasi pembuat slug lengkap dari awal. Menggabungkan fungsi modular dengan penanganan error eksplisit (`error as value`) adalah ciri khas kode Go yang tangguh dan siap produksi (*idiomatic & production-ready*).

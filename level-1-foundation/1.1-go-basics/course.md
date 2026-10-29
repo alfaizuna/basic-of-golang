@@ -29,7 +29,7 @@ Tidak ada. Course ini dirancang untuk pemula dari nol.
 | 17 | Slug Generator 1: Detect | project: deteksi karakter valid/tidak valid pada teks | ✅ |
 | 18 | Slug Generator 2: Clean | project: bersihkan teks (huruf kecil, buang simbol, rapikan spasi) | ✅ |
 | 19 | Slug Generator 3: Transform | project: ubah teks menjadi slug (pemisah `-`, kasus Unicode/aksen) | ✅ |
-| 20 | Slug Generator 4: Ship It | project: gabungkan semua tahap, error handling, test akhir | 🔓 sedang dikerjakan |
+| 20 | Slug Generator 4: Ship It | project: gabungkan semua tahap, error handling, test akhir | ✅ |
 
 ## Hasil Akhir
 Sebuah aplikasi *slug generator* CLI yang siap pakai, dapat mengubah sembarang teks/judul artikel menjadi slug URL yang bersih dan aman (misalnya: `" Belajar Go: Dasar #1! "` → `"belajar-go-dasar-1"`).
