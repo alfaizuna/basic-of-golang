@@ -12,8 +12,8 @@ Telah menyelesaikan Course 1.1: Go Basics.
 |---|---------|--------|-------|--------|
 | 01 | Slices & Arrays | Arrays: Fixed Size | array literal, panjang adalah bagian dari tipe, array disalin saat di-assign | ✅ |
 | 02 | Slices & Arrays | Slice Basics | slice literal, indexing, `len`, `for range` pada slice | ✅ |
-| 03 | Slices & Arrays | len vs cap | beda panjang dan kapasitas, cara membacanya | 🔓 sedang dikerjakan |
-| 04 | Slices & Arrays | Creating Slices with make | `make([]T, len, cap)`, kapan pakai `make` vs `var` | 🔒 |
+| 03 | Slices & Arrays | len vs cap | beda panjang dan kapasitas, cara membacanya | ✅ |
+| 04 | Slices & Arrays | Creating Slices with make | `make([]T, len, cap)`, kapan pakai `make` vs `var` | 🔓 sedang dikerjakan |
 | 05 | Slices & Arrays | Growing with append | `append`, pertumbuhan kapasitas, kenapa hasilnya harus ditampung ulang | 🔒 |
 | 06 | Slices & Arrays | Slicing & Shared Backing Arrays | `s[a:b]`, dua slice yang berbagi array yang sama dan efek sampingnya | 🔒 |
 | 07 | Slices & Arrays | copy | `copy`, membuat salinan independen | 🔒 |

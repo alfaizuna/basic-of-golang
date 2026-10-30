@@ -1,0 +1,14 @@
+package main
+
+import "fmt"
+
+func getLenAndCap(s []int) (int, int) {
+	return len(s), cap(s)
+}
+
+func main() {
+	data := []int{10, 20, 30, 40, 50}
+	part := data[1:3]
+	l, c := getLenAndCap(part)
+	fmt.Println(l, c)
+}
