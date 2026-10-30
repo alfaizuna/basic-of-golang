@@ -1,0 +1,14 @@
+package main
+
+import "fmt"
+
+func main() {
+	original := []string{"Go", "Rust", "Python"}
+
+	backup := make([]string, len(original))
+	copy(backup, original)
+	backup[2] = "TypeScript"
+
+	fmt.Println("Original:", original)
+	fmt.Println("Backup:", backup)
+}

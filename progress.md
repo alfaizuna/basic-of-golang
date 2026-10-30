@@ -1,7 +1,7 @@
 | Course | Nama | Lesson selesai | Status |
 |--------|------|----------------|--------|
 | 1.1 | Go Basics | 20/20 | ✅ |
-| 1.2 | Composite Types | 5/19 | 🔓 sedang dikerjakan |
+| 1.2 | Composite Types | 6/19 | 🔓 sedang dikerjakan |
 | 1.3 | Pointers & Memory | 0/17 | 🔒 |
 | 1.4 | Project: DNS Resolver | 0/8 | 🔒 |
 | 1.5 | Project: YAML Data Pipeline | 0/6 | 🔒 |
