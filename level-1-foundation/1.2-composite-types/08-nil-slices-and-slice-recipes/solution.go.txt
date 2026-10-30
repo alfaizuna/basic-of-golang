@@ -1,0 +1,17 @@
+package main
+
+import "fmt"
+
+func removeAt(items []string, index int) []string {
+	return append(items[:index], items[index+1:]...)
+}
+
+func main() {
+	languages := []string{"Go", "Java", "Python", "Ruby"}
+	languages = removeAt(languages, 1)
+
+	fmt.Println("Languages:", languages)
+
+	var empty []string
+	fmt.Println("Is Nil:", empty == nil)
+}
