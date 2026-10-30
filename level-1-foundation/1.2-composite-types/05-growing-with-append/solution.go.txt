@@ -1,0 +1,16 @@
+package main
+
+import "fmt"
+
+func addScore(scores []int, newScore int) []int {
+	return append(scores, newScore)
+}
+
+func main() {
+	scores := []int{80, 90}
+	scores = addScore(scores, 100)
+	scores = addScore(scores, 95)
+
+	fmt.Println("Scores:", scores)
+	fmt.Println("Length:", len(scores))
+}

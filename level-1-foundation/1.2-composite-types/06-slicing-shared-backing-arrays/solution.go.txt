@@ -1,0 +1,12 @@
+package main
+
+import "fmt"
+
+func main() {
+	days := []string{"Senin", "Selasa", "Rabu", "Kamis", "Jumat"}
+	midWeek := days[1:4]
+	midWeek[0] = "SUPER TUESDAY"
+
+	fmt.Println("Days:", days)
+	fmt.Println("MidWeek:", midWeek)
+}
