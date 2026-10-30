@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func createBufferedSlice(length int, capacity int) []int {
+	return make([]int, length, capacity)
+}
+
+func main() {
+	s := createBufferedSlice(2, 5)
+	s[0] = 100
+	s[1] = 200
+	fmt.Println(s)
+	fmt.Println(len(s), cap(s))
+}
