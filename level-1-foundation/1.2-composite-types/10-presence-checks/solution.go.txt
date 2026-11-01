@@ -1,0 +1,17 @@
+package main
+
+import "fmt"
+
+func checkStock(inventory map[string]int, item string) {
+	if stock, exists := inventory[item]; exists {
+		fmt.Printf("%s tersedia: %d unit\n", item, stock)
+	} else {
+		fmt.Printf("%s tidak ditemukan di katalog\n", item)
+	}
+}
+
+func main() {
+	katalog := map[string]int{"Apel": 5, "Mangga": 0}
+	checkStock(katalog, "Mangga")
+	checkStock(katalog, "Jeruk")
+}
