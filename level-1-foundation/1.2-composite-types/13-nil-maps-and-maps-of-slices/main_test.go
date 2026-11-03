@@ -1,0 +1,40 @@
+package main
+
+import (
+	"bytes"
+	"io"
+	"os"
+	"reflect"
+	"strings"
+	"testing"
+)
+
+func TestAddStudent(t *testing.T) {
+	m := make(map[string][]string)
+	addStudent(m, "A", "Andi")
+	addStudent(m, "A", "Budi")
+	expected := []string{"Andi", "Budi"}
+	if !reflect.DeepEqual(m["A"], expected) {
+		t.Errorf("addStudent menghasilkan %v; want %v", m["A"], expected)
+	}
+}
+
+func TestMainOutput(t *testing.T) {
+	oldStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	main()
+
+	w.Close()
+	os.Stdout = oldStdout
+
+	var buf bytes.Buffer
+	_, _ = io.Copy(&buf, r)
+	output := strings.TrimSpace(buf.String())
+
+	expected := "Kelas A: [Budi Siti]\nKelas B: [Andi]"
+	if output != expected {
+		t.Errorf("Output main() tidak sesuai.\nExpected:\n%s\n\nActual:\n%s", expected, output)
+	}
+}
