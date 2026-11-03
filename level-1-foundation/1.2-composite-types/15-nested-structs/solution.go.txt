@@ -1,0 +1,28 @@
+package main
+
+import "fmt"
+
+type Location struct {
+	City    string
+	Country string
+}
+
+type Company struct {
+	Name      string
+	Loc       Location
+	TechStack []string
+}
+
+func main() {
+	c := Company{
+		Name: "GopherHub",
+		Loc: Location{
+			City:    "Surabaya",
+			Country: "Indonesia",
+		},
+		TechStack: []string{"Go", "Kubernetes"},
+	}
+
+	fmt.Printf("Perusahaan: %s di %s\n", c.Name, c.Loc.City)
+	fmt.Printf("Tech: %s\n", c.TechStack[0])
+}
