@@ -1,0 +1,21 @@
+package main
+
+import "fmt"
+
+type Engine struct {
+	Horsepower int
+}
+
+type Car struct {
+	Engine
+	Brand string
+}
+
+func main() {
+	c := Car{
+		Engine: Engine{Horsepower: 450},
+		Brand:  "Tesla",
+	}
+
+	fmt.Printf("%s berkekuatan %d HP\n", c.Brand, c.Horsepower)
+}
