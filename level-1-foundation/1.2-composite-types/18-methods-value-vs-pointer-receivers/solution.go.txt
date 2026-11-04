@@ -1,0 +1,23 @@
+package main
+
+import "fmt"
+
+type Wallet struct {
+	Balance int
+}
+
+func (w Wallet) BalanceInfo() string {
+	return "Saldo: Rp" + fmt.Sprint(w.Balance)
+}
+
+func (w *Wallet) Deposit(amount int) {
+	w.Balance += amount
+}
+
+func main() {
+	w := Wallet{Balance: 50000}
+	fmt.Println(w.BalanceInfo())
+
+	w.Deposit(25000)
+	fmt.Println(w.BalanceInfo())
+}
