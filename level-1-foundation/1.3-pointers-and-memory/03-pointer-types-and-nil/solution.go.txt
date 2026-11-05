@@ -1,0 +1,18 @@
+package main
+
+import "fmt"
+
+func main() {
+	var ptr *string
+
+	if ptr == nil {
+		fmt.Println("ptr adalah nil")
+	}
+
+	message := "Belajar Go menyenangkan!"
+	ptr = &message
+
+	if ptr != nil {
+		fmt.Println("ptr tidak nil, isinya:", *ptr)
+	}
+}
