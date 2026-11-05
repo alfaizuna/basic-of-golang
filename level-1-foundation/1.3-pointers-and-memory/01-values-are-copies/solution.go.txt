@@ -1,0 +1,14 @@
+package main
+
+import "fmt"
+
+func resetCount(count int) {
+	count = 0
+	fmt.Println("Di dalam resetCount:", count)
+}
+
+func main() {
+	total := 100
+	resetCount(total)
+	fmt.Println("Di dalam main:", total)
+}
