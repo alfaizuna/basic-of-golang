@@ -14,8 +14,8 @@ Telah menyelesaikan Course 1.2: Composite Types.
 | 02 | Addresses | Taking Addresses: `&` and `*` | operator address-of dan dereference | ✅ |
 | 03 | Addresses | Pointer Types & nil | tipe `*T`, zero value `nil`, tidak ada pointer arithmetic | ✅ |
 | 04 | Addresses | `new` and `&T{}` | membuat pointer ke nilai baru dan ke struct literal | ✅ |
-| 05 | Mutating | Pointer Parameters | mengubah variabel pemanggil lewat parameter pointer | 🔓 |
-| 06 | Mutating | Pointers to Structs | akses field lewat pointer (auto-dereference), mengubah struct di function | 🔒 |
+| 05 | Mutating | Pointer Parameters | mengubah variabel pemanggil lewat parameter pointer | ✅ |
+| 06 | Mutating | Pointers to Structs | akses field lewat pointer (auto-dereference), mengubah struct di function | 🔓 |
 | 07 | Mutating | Pointer Receivers | method yang mengubah receiver-nya | 🔒 |
 | 08 | Mutating | Value vs Pointer Receivers | aturan memilih, konsistensi receiver dalam satu tipe | 🔒 |
 | 09 | Mutating | Pointers, Slices & Maps | apa yang dibagi dan tidak dibagi; jebakan variabel loop dan `range` yang menyalin | 🔒 |

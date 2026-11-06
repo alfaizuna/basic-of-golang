@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func double(n *int) {
+	if n != nil {
+		*n *= 2
+	}
+}
+
+func main() {
+	score := 25
+	double(&score)
+	fmt.Println("Score setelah didouble:", score)
+}
