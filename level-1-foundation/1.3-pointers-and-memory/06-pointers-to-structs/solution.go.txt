@@ -1,0 +1,20 @@
+package main
+
+import "fmt"
+
+type Product struct {
+	Name  string
+	Price int
+}
+
+func applyDiscount(p *Product, discount int) {
+	if p != nil {
+		p.Price -= discount
+	}
+}
+
+func main() {
+	item := Product{Name: "Keyboard", Price: 500000}
+	applyDiscount(&item, 75000)
+	fmt.Printf("Produk: %s, Harga: Rp%d\n", item.Name, item.Price)
+}
