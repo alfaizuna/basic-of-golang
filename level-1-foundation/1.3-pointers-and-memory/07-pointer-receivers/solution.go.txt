@@ -1,0 +1,25 @@
+package main
+
+import "fmt"
+
+type BankAccount struct {
+	Balance float64
+}
+
+func (a *BankAccount) Deposit(amount float64) {
+	a.Balance += amount
+}
+
+func (a *BankAccount) Withdraw(amount float64) {
+	if amount <= a.Balance {
+		a.Balance -= amount
+	}
+}
+
+func main() {
+	acc := BankAccount{Balance: 100}
+	acc.Deposit(50)
+	acc.Withdraw(30)
+	acc.Withdraw(200)
+	fmt.Printf("Balance: %.2f\n", acc.Balance)
+}
