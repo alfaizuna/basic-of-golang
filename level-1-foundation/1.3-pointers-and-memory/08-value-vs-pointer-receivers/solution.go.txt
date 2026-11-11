@@ -1,0 +1,27 @@
+package main
+
+import "fmt"
+
+type Thermostat struct {
+	Celsius float64
+}
+
+func (t *Thermostat) SetTemp(c float64) {
+	t.Celsius = c
+}
+
+func (t *Thermostat) Warmup(delta float64) {
+	t.Celsius += delta
+}
+
+func (t Thermostat) ToFahrenheit() float64 {
+	return t.Celsius*9/5 + 32
+}
+
+func main() {
+	th := Thermostat{}
+	th.SetTemp(20)
+	th.Warmup(5)
+	fmt.Printf("Celsius   : %.1f\n", th.Celsius)
+	fmt.Printf("Fahrenheit: %.1f\n", th.ToFahrenheit())
+}

@@ -1,0 +1,27 @@
+package main
+
+import "fmt"
+
+type _ = fmt.Stringer // dummy agar import tidak dibuang
+
+func addBonus(scores []int, bonus int) {
+	for i := range scores {
+		scores[i] += bonus
+	}
+}
+
+func resetMap(m map[string]int) {
+	for k := range m {
+		delete(m, k)
+	}
+}
+
+func main() {
+	scores := []int{10, 20, 30}
+	addBonus(scores, 5)
+	fmt.Println("scores:", scores)
+
+	stock := map[string]int{"apel": 10, "jeruk": 5}
+	resetMap(stock)
+	fmt.Println("stock:", stock)
+}
