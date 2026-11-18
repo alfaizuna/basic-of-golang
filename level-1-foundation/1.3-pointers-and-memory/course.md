@@ -20,7 +20,7 @@ Telah menyelesaikan Course 1.2: Composite Types.
 | 08 | Mutating | Value vs Pointer Receivers | aturan memilih, konsistensi receiver dalam satu tipe | ✅ |
 | 09 | Mutating | Pointers, Slices & Maps | apa yang dibagi dan tidak dibagi; jebakan variabel loop dan `range` yang menyalin | ✅ |
 | 10 | Nil Safety | Nil Pointer Panics | apa yang terjadi saat dereference `nil` dan cara membaca pesan panic-nya | ✅ |
-| 11 | Nil Safety | Guarding with nil Checks | pola pengecekan nil, return `(*T, error)` dan cek error dulu | 🔒 |
+| 11 | Nil Safety | Guarding with nil Checks | pola pengecekan nil, return `(*T, error)` dan cek error dulu | ✅ |
 | 12 | Nil Safety | Optional Values | pointer sebagai "belum diisi" (nil = unset), default konfigurasi | 🔒 |
 | 13 | Memory | Returning Pointers to Locals | aman mengembalikan alamat variabel lokal di Go | 🔒 |
 | 14 | Memory | Stack vs Heap | gambaran escape analysis, `go build -gcflags=-m` (pengenalan saja) | 🔒 |
