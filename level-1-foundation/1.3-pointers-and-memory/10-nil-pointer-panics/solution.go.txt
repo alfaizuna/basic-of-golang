@@ -1,0 +1,41 @@
+package main
+
+import "fmt"
+
+type Profile struct {
+	Bio string
+}
+
+type ServerConfig struct {
+	Host string
+	Port int
+}
+
+type AppConfig struct {
+	AppName string
+	Server  *ServerConfig
+}
+
+func createProfile(bio string) *Profile {
+	return &Profile{
+		Bio: bio,
+	}
+}
+
+func loadConfig(appName string, host string, port int) *AppConfig {
+	return &AppConfig{
+		AppName: appName,
+		Server: &ServerConfig{
+			Host: host,
+			Port: port,
+		},
+	}
+}
+
+func main() {
+	prof := createProfile("Software Engineer")
+	fmt.Println("Profile:", prof.Bio)
+
+	cfg := loadConfig("WebApp", "localhost", 8080)
+	fmt.Printf("Config: %s on %s:%d\n", cfg.AppName, cfg.Server.Host, cfg.Server.Port)
+}
