@@ -1,0 +1,55 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+type SlidingWindowLog struct {
+	limit      int
+	window     time.Duration
+	timestamps []time.Time
+	now        func() time.Time
+}
+
+func NewSlidingWindowLog(limit int, window time.Duration, now func() time.Time) *SlidingWindowLog {
+	if now == nil {
+		now = time.Now
+	}
+	return &SlidingWindowLog{
+		limit:  limit,
+		window: window,
+		now:    now,
+	}
+}
+
+func (s *SlidingWindowLog) Allow() bool {
+	cur := s.now()
+	cutoff := cur.Add(-s.window)
+
+	var valid []time.Time
+	for _, t := range s.timestamps {
+		if t.After(cutoff) {
+			valid = append(valid, t)
+		}
+	}
+	s.timestamps = valid
+
+	if len(s.timestamps) < s.limit {
+		s.timestamps = append(s.timestamps, cur)
+		return true
+	}
+	return false
+}
+
+func main() {
+	curr := time.Now()
+	s := NewSlidingWindowLog(2, 5*time.Second, func() time.Time { return curr })
+
+	fmt.Printf("Req 1: %t\n", s.Allow())
+	fmt.Printf("Req 2: %t\n", s.Allow())
+	fmt.Printf("Req 3: %t\n", s.Allow())
+
+	curr = curr.Add(6 * time.Second)
+	fmt.Printf("After slide: %t\n", s.Allow())
+}

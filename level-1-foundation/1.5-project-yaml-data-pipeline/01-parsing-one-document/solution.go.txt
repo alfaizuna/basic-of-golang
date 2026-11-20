@@ -1,0 +1,44 @@
+package main
+
+import (
+	"fmt"
+	"gopkg.in/yaml.v3"
+)
+
+type Row struct {
+	ID       string  `yaml:"id"`
+	Item     string  `yaml:"item"`
+	Category string  `yaml:"category"`
+	Price    float64 `yaml:"price"`
+	Quantity int     `yaml:"quantity"`
+	Total    float64 `yaml:"total"`
+}
+
+func ParseRow(data []byte) (*Row, error) {
+	var r Row
+	if err := yaml.Unmarshal(data, &r); err != nil {
+		return nil, err
+	}
+	return &r, nil
+}
+
+func main() {
+	sampleYAML := `
+id: TX-101
+item: Laptop
+category: electronics
+price: 1200.00
+quantity: 2
+`
+	row, err := ParseRow([]byte(sampleYAML))
+	if err != nil {
+		fmt.Println("Error parsing:", err)
+		return
+	}
+	if row != nil {
+		fmt.Printf("Parsed: %s | %s (%s) | $%.2f x %d\n",
+			row.ID, row.Item, row.Category, row.Price, row.Quantity)
+	} else {
+		fmt.Println("Row is nil")
+	}
+}

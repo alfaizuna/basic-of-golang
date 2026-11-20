@@ -1,0 +1,31 @@
+package main
+
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
+
+func TransformInput(raw string) (int, string, error) {
+	clean := strings.TrimSpace(raw)
+	parts := strings.Fields(clean)
+	if len(parts) == 0 {
+		return 0, "", fmt.Errorf("empty input")
+	}
+
+	num, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return 0, "", err
+	}
+
+	return num, strings.ToUpper(clean), nil
+}
+
+func main() {
+	n, upper, err := TransformInput("  250 usd  ")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Num: %d, Upper: %s\n", n, upper)
+}

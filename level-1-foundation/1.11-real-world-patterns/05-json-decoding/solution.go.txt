@@ -1,0 +1,31 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+)
+
+type ServerConfig struct {
+	Port  int    `json:"port"`
+	Host  string `json:"host"`
+	Debug bool   `json:"debug"`
+}
+
+func ParseConfig(data []byte) (*ServerConfig, error) {
+	var cfg ServerConfig
+	err := json.Unmarshal(data, &cfg)
+	if err != nil {
+		return nil, err
+	}
+	return &cfg, nil
+}
+
+func main() {
+	raw := []byte(`{"port": 8080, "host": "localhost", "debug": true}`)
+	cfg, err := ParseConfig(raw)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Port: %d, Host: %s, Debug: %t\n", cfg.Port, cfg.Host, cfg.Debug)
+}

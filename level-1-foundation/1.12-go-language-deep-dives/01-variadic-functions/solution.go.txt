@@ -1,0 +1,15 @@
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func JoinStrings(sep string, words ...string) string {
+	return strings.Join(words, sep)
+}
+
+func main() {
+	res := JoinStrings("-", "go", "is", "fast")
+	fmt.Println(res)
+}

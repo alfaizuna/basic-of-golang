@@ -1,0 +1,26 @@
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func CrawlConcurrentMock(urls []string, processFn func(string)) {
+	var wg sync.WaitGroup
+	for _, u := range urls {
+		wg.Add(1)
+		go func(link string) {
+			defer wg.Done()
+			processFn(link)
+		}(u)
+	}
+	wg.Wait()
+}
+
+func main() {
+	urls := []string{"url1", "url2", "url3"}
+	CrawlConcurrentMock(urls, func(u string) {
+		// simulate work
+	})
+	fmt.Println("All workers completed")
+}

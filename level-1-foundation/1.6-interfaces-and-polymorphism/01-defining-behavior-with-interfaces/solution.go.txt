@@ -1,0 +1,25 @@
+package main
+
+import "fmt"
+
+type Speaker interface {
+	Speak() string
+}
+
+type Robot struct {
+	Model string
+}
+
+func (r Robot) Speak() string {
+	return "Beep boop! I am robot " + r.Model
+}
+
+func Broadcast(s Speaker) string {
+	return s.Speak()
+}
+
+func main() {
+	rx := Robot{Model: "RX-78"}
+	msg := Broadcast(rx)
+	fmt.Printf("Robot speaks: %s\n", msg)
+}

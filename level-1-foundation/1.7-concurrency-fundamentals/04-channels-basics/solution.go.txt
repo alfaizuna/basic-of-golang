@@ -1,0 +1,18 @@
+package main
+
+import "fmt"
+
+// ComputeSquare menghitung kuadrat n menggunakan goroutine dan channel unbuffered.
+func ComputeSquare(n int) int {
+	ch := make(chan int)
+	go func() {
+		ch <- n * n
+	}()
+	return <-ch
+}
+
+func main() {
+	val := 9
+	result := ComputeSquare(val)
+	fmt.Printf("Kuadrat dari %d adalah %d\n", val, result)
+}

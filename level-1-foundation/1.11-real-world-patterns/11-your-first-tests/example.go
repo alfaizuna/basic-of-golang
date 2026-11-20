@@ -1,0 +1,17 @@
+//go:build ignore
+
+package main
+
+import "testing"
+
+func Add(a, b int) int {
+	return a + b
+}
+
+func TestAdd(t *testing.T) {
+	got := Add(2, 3)
+	want := 5
+	if got != want {
+		t.Errorf("Add(2, 3) = %d; want %d", got, want)
+	}
+}

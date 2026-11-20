@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func FormatSemver(major, minor, patch int, prerelease string) string {
+	if prerelease != "" {
+		return fmt.Sprintf("v%d.%d.%d-%s", major, minor, patch, prerelease)
+	}
+	return fmt.Sprintf("v%d.%d.%d", major, minor, patch)
+}
+
+func main() {
+	fmt.Println("Release:", FormatSemver(1, 2, 3, ""))
+	fmt.Println("Pre-release:", FormatSemver(2, 0, 0, "beta.1"))
+}

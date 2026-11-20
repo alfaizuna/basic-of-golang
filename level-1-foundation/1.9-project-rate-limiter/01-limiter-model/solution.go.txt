@@ -1,0 +1,30 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+type Limiter struct {
+	Limit int
+	Now   func() time.Time
+}
+
+func NewLimiter(limit int, now func() time.Time) *Limiter {
+	if now == nil {
+		now = time.Now
+	}
+	return &Limiter{
+		Limit: limit,
+		Now:   now,
+	}
+}
+
+func (l *Limiter) Allow() bool {
+	return l.Limit > 0
+}
+
+func main() {
+	l := NewLimiter(5, nil)
+	fmt.Printf("Limiter ready: %t\n", l.Allow())
+}

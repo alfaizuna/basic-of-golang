@@ -1,0 +1,99 @@
+package main
+
+import "fmt"
+
+type RecordType string
+
+const (
+	TypeA     RecordType = "A"
+	TypeCNAME RecordType = "CNAME"
+)
+
+type Record struct {
+	Name  string
+	Type  RecordType
+	Value string
+	TTL   int
+}
+
+func NewRecord(name string, recordType RecordType, value string, ttl int) *Record {
+	return &Record{
+		Name:  name,
+		Type:  recordType,
+		Value: value,
+		TTL:   ttl,
+	}
+}
+
+type Zone struct {
+	Name    string
+	records map[string][]*Record
+}
+
+func NewZone(name string) *Zone {
+	return &Zone{
+		Name:    name,
+		records: make(map[string][]*Record),
+	}
+}
+
+func (z *Zone) AddRecord(rec *Record) {
+	if z == nil || rec == nil {
+		return
+	}
+	z.records[rec.Name] = append(z.records[rec.Name], rec)
+}
+
+func (z *Zone) Lookup(name string, recordType RecordType) *Record {
+	if z == nil || z.records == nil {
+		return nil
+	}
+	for _, r := range z.records[name] {
+		if r.Type == recordType {
+			return r
+		}
+	}
+	return nil
+}
+
+func (r *Record) UpdateValue(newValue string) {
+	if r == nil {
+		return
+	}
+	r.Value = newValue
+}
+
+func (r *Record) UpdateTTL(newTTL int) {
+	if r == nil {
+		return
+	}
+	r.TTL = newTTL
+}
+
+func (z *Zone) UpdateRecord(name string, recordType RecordType, newValue string, newTTL int) bool {
+	rec := z.Lookup(name, recordType)
+	if rec == nil {
+		return false
+	}
+	rec.UpdateValue(newValue)
+	rec.UpdateTTL(newTTL)
+	return true
+}
+
+func main() {
+	z := NewZone("example.com")
+	z.AddRecord(NewRecord("example.com", TypeA, "93.184.216.34", 300))
+
+	before := z.Lookup("example.com", TypeA)
+	if before != nil {
+		fmt.Printf("Before: %s -> %s (TTL: %d)\n", before.Name, before.Value, before.TTL)
+	}
+
+	ok := z.UpdateRecord("example.com", TypeA, "93.184.216.35", 600)
+	fmt.Println("Update success:", ok)
+
+	after := z.Lookup("example.com", TypeA)
+	if after != nil {
+		fmt.Printf("After : %s -> %s (TTL: %d)\n", after.Name, after.Value, after.TTL)
+	}
+}

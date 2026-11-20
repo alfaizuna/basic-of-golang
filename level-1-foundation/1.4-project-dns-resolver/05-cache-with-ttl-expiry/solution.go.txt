@@ -1,0 +1,99 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+type RecordType string
+
+const (
+	TypeA     RecordType = "A"
+	TypeCNAME RecordType = "CNAME"
+)
+
+type Record struct {
+	Name  string
+	Type  RecordType
+	Value string
+	TTL   int
+}
+
+func NewRecord(name string, recordType RecordType, value string, ttl int) *Record {
+	return &Record{
+		Name:  name,
+		Type:  recordType,
+		Value: value,
+		TTL:   ttl,
+	}
+}
+
+type CacheEntry struct {
+	Record    *Record
+	ExpiresAt time.Time
+}
+
+type DNSCache struct {
+	entries map[string]*CacheEntry
+	now     func() time.Time
+}
+
+func NewDNSCache() *DNSCache {
+	return &DNSCache{
+		entries: make(map[string]*CacheEntry),
+		now:     time.Now,
+	}
+}
+
+func (c *DNSCache) Set(rec *Record) {
+	if c == nil || rec == nil {
+		return
+	}
+	key := string(rec.Type) + ":" + rec.Name
+	expiresAt := c.now().Add(time.Duration(rec.TTL) * time.Second)
+	c.entries[key] = &CacheEntry{
+		Record:    rec,
+		ExpiresAt: expiresAt,
+	}
+}
+
+func (c *DNSCache) Get(name string, recordType RecordType) *Record {
+	if c == nil || c.entries == nil {
+		return nil
+	}
+	key := string(recordType) + ":" + name
+	entry, ok := c.entries[key]
+	if !ok {
+		return nil
+	}
+	if c.now().Before(entry.ExpiresAt) {
+		return entry.Record
+	}
+	delete(c.entries, key)
+	return nil
+}
+
+func main() {
+	cache := NewDNSCache()
+	baseTime := time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC)
+	currentTime := baseTime
+
+	cache.now = func() time.Time {
+		return currentTime
+	}
+
+	rec := NewRecord("example.com", TypeA, "93.184.216.34", 300)
+	cache.Set(rec)
+
+	cached := cache.Get("example.com", TypeA)
+	if cached != nil {
+		fmt.Printf("Cached lookup (immediate): %s\n", cached.Value)
+	}
+
+	currentTime = baseTime.Add(301 * time.Second)
+
+	expired := cache.Get("example.com", TypeA)
+	if expired == nil {
+		fmt.Println("Cached lookup (after expiry): nil")
+	}
+}

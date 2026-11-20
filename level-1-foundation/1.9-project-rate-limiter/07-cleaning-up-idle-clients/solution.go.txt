@@ -1,0 +1,56 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+type ClientInfo struct {
+	lastSeen time.Time
+}
+
+type LimiterWithCleanup struct {
+	clients map[string]*ClientInfo
+	now     func() time.Time
+}
+
+func NewLimiterWithCleanup(now func() time.Time) *LimiterWithCleanup {
+	if now == nil {
+		now = time.Now
+	}
+	return &LimiterWithCleanup{
+		clients: make(map[string]*ClientInfo),
+		now:     now,
+	}
+}
+
+func (l *LimiterWithCleanup) Touch(key string) {
+	l.clients[key] = &ClientInfo{lastSeen: l.now()}
+}
+
+func (l *LimiterWithCleanup) Cleanup(maxIdle time.Duration) int {
+	cur := l.now()
+	var removed int
+	for k, info := range l.clients {
+		if cur.Sub(info.lastSeen) > maxIdle {
+			delete(l.clients, k)
+			removed++
+		}
+	}
+	return removed
+}
+
+func main() {
+	curr := time.Now()
+	l := NewLimiterWithCleanup(func() time.Time { return curr })
+
+	l.Touch("client-active")
+	l.Touch("client-idle")
+
+	curr = curr.Add(10 * time.Minute)
+	l.Touch("client-active") // refresh active client
+
+	removed := l.Cleanup(5 * time.Minute)
+	fmt.Printf("Removed clients: %d\n", removed)
+	fmt.Printf("Remaining clients: %d\n", len(l.clients))
+}

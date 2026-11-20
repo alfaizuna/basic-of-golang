@@ -1,0 +1,19 @@
+package main
+
+import "fmt"
+
+// QueueJobs membuat buffered channel berisi semua jobs dan mengembalikan channel beserta kapasitasnya.
+func QueueJobs(jobs []string) (<-chan string, int) {
+	ch := make(chan string, len(jobs))
+	for _, job := range jobs {
+		ch <- job
+	}
+	return ch, cap(ch)
+}
+
+func main() {
+	jobList := []string{"Job1", "Job2", "Job3"}
+	ch, capacity := QueueJobs(jobList)
+	fmt.Printf("Buffered jobs count: %d\n", capacity)
+	_ = ch
+}

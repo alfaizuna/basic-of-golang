@@ -1,0 +1,46 @@
+package main
+
+import "fmt"
+
+type Sender interface {
+	Send(msg string) error
+}
+
+type Receiver interface {
+	Receive() (string, error)
+}
+
+type Transceiver interface {
+	Sender
+	Receiver
+}
+
+type RadioDevice struct {
+	lastMessage string
+}
+
+func (r *RadioDevice) Send(msg string) error {
+	r.lastMessage = msg
+	return nil
+}
+
+func (r *RadioDevice) Receive() (string, error) {
+	return r.lastMessage, nil
+}
+
+func BroadcastPing(t Transceiver, msg string) (string, error) {
+	if err := t.Send(msg); err != nil {
+		return "", err
+	}
+	return t.Receive()
+}
+
+func main() {
+	radio := &RadioDevice{}
+	got, err := BroadcastPing(radio, "Ping 101")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("Terkirim & Diterima:", got)
+}

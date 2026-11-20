@@ -1,0 +1,31 @@
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"net/http"
+	"time"
+)
+
+func SendJSONPayload(client *http.Client, url string, jsonData []byte) (int, error) {
+	if client == nil {
+		client = &http.Client{Timeout: 5 * time.Second}
+	}
+	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	return resp.StatusCode, nil
+}
+
+func main() {
+	client := &http.Client{Timeout: 3 * time.Second}
+	status, err := SendJSONPayload(client, "https://example.com", []byte(`{"hello":"world"}`))
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Created status: %d\n", status)
+}

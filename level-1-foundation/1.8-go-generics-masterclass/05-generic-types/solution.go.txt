@@ -1,0 +1,22 @@
+package main
+
+import "fmt"
+
+// Pair menyimpan dua nilai berpengetikan generik.
+type Pair[T, U any] struct {
+	First  T
+	Second U
+}
+
+// NewPair adalah fungsi constructor untuk membuat Pair baru dengan type inference.
+func NewPair[T, U any](first T, second U) Pair[T, U] {
+	return Pair[T, U]{
+		First:  first,
+		Second: second,
+	}
+}
+
+func main() {
+	p := NewPair("HTTP", 200)
+	fmt.Printf("Pair: %s = %d\n", p.First, p.Second)
+}

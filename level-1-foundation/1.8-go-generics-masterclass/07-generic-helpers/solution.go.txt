@@ -1,0 +1,22 @@
+package main
+
+import "fmt"
+
+// Filter menyaring slice berdasarkan fungsi predicate.
+func Filter[T any](items []T, predicate func(T) bool) []T {
+	var result []T
+	for _, v := range items {
+		if predicate(v) {
+			result = append(result, v)
+		}
+	}
+	return result
+}
+
+func main() {
+	nums := []int{1, 2, 3, 4, 5, 6}
+	evens := Filter(nums, func(n int) bool {
+		return n%2 == 0
+	})
+	fmt.Printf("Filtered evens: %v\n", evens)
+}

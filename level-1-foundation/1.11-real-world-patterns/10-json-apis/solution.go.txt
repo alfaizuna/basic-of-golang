@@ -1,0 +1,36 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+type SumRequest struct {
+	A int `json:"a"`
+	B int `json:"b"`
+}
+
+type SumResponse struct {
+	Sum int `json:"sum"`
+}
+
+func SumHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var req SumRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(SumResponse{
+		Sum: req.A + req.B,
+	})
+}
+
+func main() {
+	http.HandleFunc("/api/sum", SumHandler)
+	fmt.Println("API sum endpoint ready")
+}

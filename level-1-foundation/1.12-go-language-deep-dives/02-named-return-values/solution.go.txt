@@ -1,0 +1,28 @@
+package main
+
+import "fmt"
+
+func CalculateStats(numbers []int) (min int, max int, total int) {
+	if len(numbers) == 0 {
+		return 0, 0, 0
+	}
+
+	min = numbers[0]
+	max = numbers[0]
+	for _, n := range numbers {
+		if n < min {
+			min = n
+		}
+		if n > max {
+			max = n
+		}
+		total += n
+	}
+	return min, max, total
+}
+
+func main() {
+	numbers := []int{5, 2, 9}
+	min, max, total := CalculateStats(numbers)
+	fmt.Printf("Min: %d, Max: %d, Total: %d\n", min, max, total)
+}

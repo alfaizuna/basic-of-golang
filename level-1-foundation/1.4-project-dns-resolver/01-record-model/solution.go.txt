@@ -1,0 +1,33 @@
+package main
+
+import "fmt"
+
+type RecordType string
+
+const (
+	TypeA     RecordType = "A"
+	TypeCNAME RecordType = "CNAME"
+)
+
+type Record struct {
+	Name  string
+	Type  RecordType
+	Value string
+	TTL   int
+}
+
+func NewRecord(name string, recordType RecordType, value string, ttl int) *Record {
+	return &Record{
+		Name:  name,
+		Type:  recordType,
+		Value: value,
+		TTL:   ttl,
+	}
+}
+
+func main() {
+	rec := NewRecord("example.com", TypeA, "93.184.216.34", 300)
+	cname := NewRecord("www.example.com", TypeCNAME, "example.com", 3600)
+	fmt.Printf("Record created: %s (%s -> %s, TTL: %ds)\n", rec.Name, rec.Type, rec.Value, rec.TTL)
+	fmt.Printf("Alias created: %s (%s -> %s, TTL: %ds)\n", cname.Name, cname.Type, cname.Value, cname.TTL)
+}

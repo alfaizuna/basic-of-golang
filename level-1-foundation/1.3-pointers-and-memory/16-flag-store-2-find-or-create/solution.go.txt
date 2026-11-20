@@ -1,0 +1,58 @@
+package main
+
+import "fmt"
+
+type Flag struct {
+	Name    string
+	Enabled bool
+	Rollout int
+}
+
+type Store struct {
+	flags map[string]*Flag
+}
+
+func NewStore() *Store {
+	return &Store{
+		flags: make(map[string]*Flag),
+	}
+}
+
+func (s *Store) Count() int {
+	if s == nil || s.flags == nil {
+		return 0
+	}
+	return len(s.flags)
+}
+
+func (s *Store) Get(name string) (*Flag, bool) {
+	fl, ok := s.flags[name]
+	if !ok {
+		return nil, false
+	}
+	return fl, true
+}
+
+func (s *Store) FindOrCreate(name string) *Flag {
+	if fl, exists := s.Get(name); exists {
+		return fl
+	}
+	fl := &Flag{
+		Name:    name,
+		Enabled: false,
+		Rollout: 0,
+	}
+	s.flags[name] = fl
+	return fl
+}
+
+func main() {
+	store := NewStore()
+
+	f1 := store.FindOrCreate("dark-mode")
+	fmt.Printf("Flag count: %d\n", store.Count())
+	fmt.Printf("Flag 1: %s (enabled: %t, rollout: %d%%)\n", f1.Name, f1.Enabled, f1.Rollout)
+
+	f2 := store.FindOrCreate("dark-mode")
+	fmt.Printf("Same memory address: %t\n", f1 == f2)
+}

@@ -1,0 +1,31 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"io"
+	"strings"
+)
+
+func FilterLines(r io.Reader, keyword string) ([]string, error) {
+	scanner := bufio.NewScanner(r)
+	var matched []string
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.Contains(line, keyword) {
+			matched = append(matched, line)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return matched, nil
+}
+
+func main() {
+	text := "ERROR: connection lost\nINFO: user logged in\nERROR: timeout"
+	lines, _ := FilterLines(strings.NewReader(text), "ERROR")
+	fmt.Printf("Matched lines count: %d\n", len(lines))
+}

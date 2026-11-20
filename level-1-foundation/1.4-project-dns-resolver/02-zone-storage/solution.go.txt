@@ -1,0 +1,56 @@
+package main
+
+import "fmt"
+
+type RecordType string
+
+const (
+	TypeA     RecordType = "A"
+	TypeCNAME RecordType = "CNAME"
+)
+
+type Record struct {
+	Name  string
+	Type  RecordType
+	Value string
+	TTL   int
+}
+
+func NewRecord(name string, recordType RecordType, value string, ttl int) *Record {
+	return &Record{
+		Name:  name,
+		Type:  recordType,
+		Value: value,
+		TTL:   ttl,
+	}
+}
+
+type Zone struct {
+	Name    string
+	records map[string][]*Record
+}
+
+func NewZone(name string) *Zone {
+	return &Zone{
+		Name:    name,
+		records: make(map[string][]*Record),
+	}
+}
+
+func (z *Zone) RecordCount() int {
+	if z == nil || z.records == nil {
+		return 0
+	}
+	total := 0
+	for _, recs := range z.records {
+		total += len(recs)
+	}
+	return total
+}
+
+func main() {
+	z := NewZone("example.com")
+	if z != nil {
+		fmt.Printf("Zone created: %s (records: %d)\n", z.Name, z.RecordCount())
+	}
+}

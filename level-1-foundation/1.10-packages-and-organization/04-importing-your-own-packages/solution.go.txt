@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func ResolveNamespace(alias, originalPackage string) string {
+	if alias != "" {
+		return fmt.Sprintf("using alias %s for %s", alias, originalPackage)
+	}
+	return fmt.Sprintf("using default package %s", originalPackage)
+}
+
+func main() {
+	fmt.Println(ResolveNamespace("crand", "crypto/rand"))
+	fmt.Println(ResolveNamespace("", "strings"))
+}

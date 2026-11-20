@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func DescribePackage(name string, isMain bool) string {
+	if isMain {
+		return fmt.Sprintf("%s (executable)", name)
+	}
+	return fmt.Sprintf("%s (library)", name)
+}
+
+func main() {
+	fmt.Println(DescribePackage("main", true))
+	fmt.Println(DescribePackage("mathutil", false))
+}

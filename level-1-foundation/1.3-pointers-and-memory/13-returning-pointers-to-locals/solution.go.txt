@@ -1,0 +1,32 @@
+package main
+
+import "fmt"
+
+type UserProfile struct {
+	Username string
+	Email    string
+}
+
+func NewCounter(initial int) *int {
+	val := initial
+	return &val
+}
+
+func NewProfile(username, email string) *UserProfile {
+	return &UserProfile{
+		Username: username,
+		Email:    email,
+	}
+}
+
+func main() {
+	c := NewCounter(10)
+	if c != nil {
+		fmt.Println("Counter:", *c)
+	}
+
+	p := NewProfile("budi", "budi@example.com")
+	if p != nil {
+		fmt.Printf("Profile: %s (%s)\n", p.Username, p.Email)
+	}
+}

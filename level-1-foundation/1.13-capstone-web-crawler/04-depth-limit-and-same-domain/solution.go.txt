@@ -1,0 +1,22 @@
+package main
+
+import (
+	"fmt"
+	"net/url"
+)
+
+func IsAllowed(targetURL, baseHost string, currentDepth, maxDepth int) bool {
+	if currentDepth > maxDepth {
+		return false
+	}
+	u, err := url.Parse(targetURL)
+	if err != nil {
+		return false
+	}
+	return u.Host == baseHost
+}
+
+func main() {
+	ok := IsAllowed("https://myblog.com/posts/1", "myblog.com", 1, 2)
+	fmt.Printf("Allowed: %t\n", ok)
+}

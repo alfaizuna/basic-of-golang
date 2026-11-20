@@ -1,0 +1,25 @@
+package main
+
+import "fmt"
+
+// AccumulateConcurrent menjumlahkan semua elemen secara konkuren tanpa data race.
+func AccumulateConcurrent(values []int) int {
+	ch := make(chan int, len(values))
+	for _, v := range values {
+		go func(val int) {
+			ch <- val
+		}(v)
+	}
+
+	var total int
+	for i := 0; i < len(values); i++ {
+		total += <-ch
+	}
+	return total
+}
+
+func main() {
+	numbers := []int{1, 2, 3, 4, 5}
+	sum := AccumulateConcurrent(numbers)
+	fmt.Printf("Total sum: %d\n", sum)
+}

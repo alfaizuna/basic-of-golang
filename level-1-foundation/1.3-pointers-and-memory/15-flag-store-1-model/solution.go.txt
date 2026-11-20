@@ -1,0 +1,33 @@
+package main
+
+import "fmt"
+
+type Flag struct {
+	Name    string
+	Enabled bool
+	Rollout int
+}
+
+type Store struct {
+	flags map[string]*Flag
+}
+
+func NewStore() *Store {
+	return &Store{
+		flags: make(map[string]*Flag),
+	}
+}
+
+func (s *Store) Count() int {
+	if s == nil || s.flags == nil {
+		return 0
+	}
+	return len(s.flags)
+}
+
+func main() {
+	store := NewStore()
+	if store != nil {
+		fmt.Printf("Store created. Initial flag count: %d\n", store.Count())
+	}
+}

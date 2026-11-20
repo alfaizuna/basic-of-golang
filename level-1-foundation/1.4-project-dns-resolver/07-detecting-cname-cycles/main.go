@@ -1,0 +1,82 @@
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+type RecordType string
+
+const (
+	TypeA     RecordType = "A"
+	TypeCNAME RecordType = "CNAME"
+)
+
+type Record struct {
+	Name  string
+	Type  RecordType
+	Value string
+	TTL   int
+}
+
+func NewRecord(name string, recordType RecordType, value string, ttl int) *Record {
+	return &Record{
+		Name:  name,
+		Type:  recordType,
+		Value: value,
+		TTL:   ttl,
+	}
+}
+
+type Zone struct {
+	Name    string
+	records map[string][]*Record
+}
+
+func NewZone(name string) *Zone {
+	return &Zone{
+		Name:    name,
+		records: make(map[string][]*Record),
+	}
+}
+
+func (z *Zone) AddRecord(rec *Record) {
+	if z == nil || rec == nil {
+		return
+	}
+	z.records[rec.Name] = append(z.records[rec.Name], rec)
+}
+
+func (z *Zone) Lookup(name string, recordType RecordType) *Record {
+	if z == nil || z.records == nil {
+		return nil
+	}
+	for _, r := range z.records[name] {
+		if r.Type == recordType {
+			return r
+		}
+	}
+	return nil
+}
+
+const maxCNAMEDepth = 10
+
+// TODO: Perbarui method Resolve agar mendeteksi siklus CNAME menggunakan map[string]bool
+// dan batas kedalaman maksimum maxCNAMEDepth (10).
+// Kembalikan error "cname loop detected" jika domain berputar,
+// atau "maximum CNAME depth exceeded" jika melebihi batas.
+func (z *Zone) Resolve(name string) (*Record, error) {
+	return nil, errors.New("not implemented")
+}
+
+func main() {
+	z := NewZone("example.com")
+	// Siklus melingkar: loop-a -> loop-b -> loop-a
+	z.AddRecord(NewRecord("loop-a.example.com", TypeCNAME, "loop-b.example.com", 300))
+	z.AddRecord(NewRecord("loop-b.example.com", TypeCNAME, "loop-a.example.com", 300))
+
+	_, err := z.Resolve("loop-a.example.com")
+	if err != nil {
+		fmt.Printf("Resolving loop-a: error: %s\n", err.Error())
+	}
+}

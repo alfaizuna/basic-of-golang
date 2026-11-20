@@ -1,0 +1,81 @@
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+type Flag struct {
+	Name    string
+	Enabled bool
+	Rollout int
+}
+
+type Store struct {
+	flags map[string]*Flag
+}
+
+func NewStore() *Store {
+	return &Store{
+		flags: make(map[string]*Flag),
+	}
+}
+
+func (f *Flag) Enable() {
+	if f == nil {
+		return
+	}
+	f.Enabled = true
+}
+
+func (f *Flag) Disable() {
+	if f == nil {
+		return
+	}
+	f.Enabled = false
+}
+
+func (f *Flag) SetRollout(percentage int) error {
+	if f == nil {
+		return errors.New("flag is nil")
+	}
+	if percentage < 0 || percentage > 100 {
+		return errors.New("rollout must be between 0 and 100")
+	}
+	f.Rollout = percentage
+	return nil
+}
+
+func (s *Store) FindOrCreate(name string) *Flag {
+	if fl, exists := s.flags[name]; exists {
+		return fl
+	}
+	fl := &Flag{
+		Name:    name,
+		Enabled: false,
+		Rollout: 0,
+	}
+	s.flags[name] = fl
+	return fl
+}
+
+func (s *Store) Get(name string) (*Flag, bool) {
+	fl, ok := s.flags[name]
+	return fl, ok
+}
+
+func main() {
+	store := NewStore()
+
+	flagRef := store.FindOrCreate("beta-ui")
+	fmt.Printf("Initial: %s (enabled: %t, rollout: %d%%)\n", flagRef.Name, flagRef.Enabled, flagRef.Rollout)
+
+	flagRef.Enable()
+	_ = flagRef.SetRollout(75)
+
+	retrievedFlag, _ := store.Get("beta-ui")
+	fmt.Println("After update via pointer:")
+	fmt.Printf("Retrieved from store: %s (enabled: %t, rollout: %d%%)\n",
+		retrievedFlag.Name, retrievedFlag.Enabled, retrievedFlag.Rollout)
+	fmt.Printf("Shared memory confirmed: %t\n", flagRef == retrievedFlag)
+}

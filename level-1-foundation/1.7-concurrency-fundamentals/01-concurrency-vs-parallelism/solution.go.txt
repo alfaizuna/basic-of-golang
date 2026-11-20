@@ -1,0 +1,17 @@
+package main
+
+import (
+	"fmt"
+	"runtime"
+)
+
+// SimulateWorkload menghitung total unit kerja yang diselesaikan oleh sejumlah worker.
+func SimulateWorkload(workers int) int {
+	return workers * 10
+}
+
+func main() {
+	_ = runtime.NumCPU()
+	work := SimulateWorkload(4)
+	fmt.Printf("Total work: %d\n", work)
+}

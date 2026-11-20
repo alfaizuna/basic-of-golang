@@ -1,0 +1,14 @@
+package main
+
+import "fmt"
+
+func RequirePositive(val int) {
+	if val <= 0 {
+		panic(fmt.Sprintf("invalid value %d: must be positive", val))
+	}
+}
+
+func main() {
+	RequirePositive(42)
+	fmt.Println("Valid value: 42")
+}

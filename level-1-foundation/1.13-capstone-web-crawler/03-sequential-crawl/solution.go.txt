@@ -1,0 +1,53 @@
+package main
+
+import (
+	"fmt"
+)
+
+type Fetcher interface {
+	Fetch(url string) (string, []string, error)
+}
+
+type FakeFetcher struct {
+	Data map[string][]string
+}
+
+func (f *FakeFetcher) Fetch(url string) (string, []string, error) {
+	if urls, ok := f.Data[url]; ok {
+		return "body", urls, nil
+	}
+	return "", nil, fmt.Errorf("not found")
+}
+
+func CrawlSequential(url string, fetcher Fetcher, visited map[string]bool) []string {
+	if visited[url] {
+		return nil
+	}
+	visited[url] = true
+
+	results := []string{url}
+	_, urls, err := fetcher.Fetch(url)
+	if err != nil {
+		return results
+	}
+
+	for _, u := range urls {
+		sub := CrawlSequential(u, fetcher, visited)
+		results = append(results, sub...)
+	}
+	return results
+}
+
+func main() {
+	f := &FakeFetcher{
+		Data: map[string][]string{
+			"page1": {"page2", "page3"},
+			"page2": {"page1"}, // Siklus link kembali ke page1
+			"page3": {},
+		},
+	}
+
+	visited := make(map[string]bool)
+	pages := CrawlSequential("page1", f, visited)
+	fmt.Printf("Total crawled pages: %d\n", len(pages))
+}

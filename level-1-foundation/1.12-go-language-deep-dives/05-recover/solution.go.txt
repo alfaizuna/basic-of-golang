@@ -1,0 +1,22 @@
+package main
+
+import "fmt"
+
+func SafeRun(fn func()) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("panic recovered: %v", r)
+		}
+	}()
+	fn()
+	return nil
+}
+
+func main() {
+	err := SafeRun(func() {
+		panic("something went wrong")
+	})
+	if err != nil {
+		fmt.Printf("Caught panic: %v\n", err)
+	}
+}

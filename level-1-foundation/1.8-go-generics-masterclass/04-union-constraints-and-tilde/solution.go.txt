@@ -1,0 +1,26 @@
+package main
+
+import "fmt"
+
+// OrderedNumber adalah constraint untuk tipe dengan underlying type int atau float64.
+type OrderedNumber interface {
+	~int | ~float64
+}
+
+// Speed adalah tipe kustom dengan dasar float64.
+type Speed float64
+
+// Max mengembalikan nilai terbesar dari dua nilai bertipe OrderedNumber.
+func Max[T OrderedNumber](a, b T) T {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func main() {
+	s1 := Speed(60.0)
+	s2 := Speed(85.5)
+	maxSpeed := Max(s1, s2)
+	fmt.Printf("Max speed: %.2f\n", maxSpeed)
+}

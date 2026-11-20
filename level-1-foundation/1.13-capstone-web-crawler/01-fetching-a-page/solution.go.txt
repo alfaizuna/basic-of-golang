@@ -1,0 +1,39 @@
+package main
+
+import (
+	"fmt"
+)
+
+type Fetcher interface {
+	Fetch(url string) (string, []string, error)
+}
+
+type FakeResponse struct {
+	Body string
+	URLs []string
+}
+
+type FakeFetcher struct {
+	Data map[string]*FakeResponse
+}
+
+func (f *FakeFetcher) Fetch(url string) (string, []string, error) {
+	if res, ok := f.Data[url]; ok {
+		return res.Body, res.URLs, nil
+	}
+	return "", nil, fmt.Errorf("not found: %s", url)
+}
+
+func main() {
+	fetcher := &FakeFetcher{
+		Data: map[string]*FakeResponse{
+			"https://shop.local": {
+				Body: "Home Page",
+				URLs: []string{"https://shop.local/products", "https://shop.local/about"},
+			},
+		},
+	}
+
+	body, urls, _ := fetcher.Fetch("https://shop.local")
+	fmt.Printf("Fetched: %s with %d links\n", body, len(urls))
+}

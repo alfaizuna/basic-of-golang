@@ -1,0 +1,18 @@
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+func ValidateEmail(email string) bool {
+	if len(email) < 5 {
+		return false
+	}
+	return strings.Contains(email, "@") && strings.Contains(email, ".")
+}
+
+func main() {
+	valid := ValidateEmail("dev@golang.org")
+	fmt.Printf("Email valid: %t\n", valid)
+}

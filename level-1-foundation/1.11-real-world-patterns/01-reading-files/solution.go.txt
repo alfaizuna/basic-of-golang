@@ -1,0 +1,25 @@
+package main
+
+import (
+	"errors"
+	"fmt"
+	"os"
+)
+
+func LoadConfigText(path string) (string, error) {
+	data, err := os.ReadFile(path)
+	if errors.Is(err, os.ErrNotExist) {
+		return "", fmt.Errorf("file not found")
+	}
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+func main() {
+	_, err := LoadConfigText("non_existent_file.txt")
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+}

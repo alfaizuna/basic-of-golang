@@ -1,0 +1,47 @@
+package main
+
+import "fmt"
+
+type Wallet struct {
+	owner   string
+	balance float64
+}
+
+func NewWallet(owner string, initial float64) *Wallet {
+	if initial < 0 {
+		initial = 0
+	}
+	return &Wallet{
+		owner:   owner,
+		balance: initial,
+	}
+}
+
+func (w *Wallet) Deposit(amount float64) {
+	if amount > 0 {
+		w.balance += amount
+	}
+}
+
+func (w *Wallet) Withdraw(amount float64) bool {
+	if amount > 0 && w.balance >= amount {
+		w.balance -= amount
+		return true
+	}
+	return false
+}
+
+func (w *Wallet) Balance() float64 {
+	return w.balance
+}
+
+func (w *Wallet) Owner() string {
+	return w.owner
+}
+
+func main() {
+	w := NewWallet("Alice", 100.0)
+	w.Deposit(50.0)
+	w.Withdraw(30.0)
+	fmt.Printf("%s balance: %.2f\n", w.Owner(), w.Balance())
+}

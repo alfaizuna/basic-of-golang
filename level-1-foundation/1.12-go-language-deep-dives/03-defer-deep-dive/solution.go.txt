@@ -1,0 +1,16 @@
+package main
+
+import "fmt"
+
+func AddTax(amount float64) (total float64) {
+	total = amount
+	defer func() {
+		total *= 1.10
+	}()
+	return total
+}
+
+func main() {
+	result := AddTax(100.0)
+	fmt.Printf("Total with tax: %.2f\n", result)
+}

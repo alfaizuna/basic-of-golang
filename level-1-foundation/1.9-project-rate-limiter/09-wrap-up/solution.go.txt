@@ -1,0 +1,36 @@
+package main
+
+import "fmt"
+
+type RateLimiter interface {
+	Allow(key string) bool
+}
+
+type SimulatedLimiter struct {
+	maxRequests int
+	current     int
+}
+
+func (s *SimulatedLimiter) Allow(key string) bool {
+	if s.current < s.maxRequests {
+		s.current++
+		return true
+	}
+	return false
+}
+
+func ExecuteRequests(rl RateLimiter, key string, count int) int {
+	var allowed int
+	for i := 0; i < count; i++ {
+		if rl.Allow(key) {
+			allowed++
+		}
+	}
+	return allowed
+}
+
+func main() {
+	sim := &SimulatedLimiter{maxRequests: 5}
+	permitted := ExecuteRequests(sim, "clientA", 10)
+	fmt.Printf("Total permitted: %d of 10\n", permitted)
+}

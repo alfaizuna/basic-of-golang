@@ -1,0 +1,28 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func UserSearchHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		_, _ = w.Write([]byte("Method Not Allowed"))
+		return
+	}
+
+	q := r.URL.Query().Get("q")
+	if q == "" {
+		q = "all"
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "Query: %s", q)
+}
+
+func main() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/users", UserSearchHandler)
+	fmt.Println("Mux configured")
+}

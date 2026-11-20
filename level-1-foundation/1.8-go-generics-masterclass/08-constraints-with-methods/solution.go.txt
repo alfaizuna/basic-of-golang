@@ -1,0 +1,30 @@
+package main
+
+import "fmt"
+
+type Measurable interface {
+	Area() float64
+}
+
+type Square struct {
+	Side float64
+}
+
+func (s Square) Area() float64 {
+	return s.Side * s.Side
+}
+
+// SumAreas menjumlahkan nilai Area dari sekumpulan objek Measurable.
+func SumAreas[T Measurable](items []T) float64 {
+	var total float64
+	for _, item := range items {
+		total += item.Area()
+	}
+	return total
+}
+
+func main() {
+	squares := []Square{{Side: 3}, {Side: 4}}
+	total := SumAreas(squares)
+	fmt.Printf("Total Area: %.2f\n", total)
+}

@@ -1,0 +1,50 @@
+package main
+
+import (
+	"fmt"
+	"net/url"
+	"strings"
+
+	"golang.org/x/net/html"
+)
+
+func ExtractLinks(baseStr, htmlContent string) ([]string, error) {
+	parsedBase, err := url.Parse(baseStr)
+	if err != nil {
+		return nil, err
+	}
+
+	tokenizer := html.NewTokenizer(strings.NewReader(htmlContent))
+	var links []string
+
+	for {
+		tt := tokenizer.Next()
+		if tt == html.ErrorToken {
+			break
+		}
+
+		if tt == html.StartTagToken || tt == html.SelfClosingTagToken {
+			token := tokenizer.Token()
+			if token.Data == "a" {
+				for _, attr := range token.Attr {
+					if attr.Key == "href" {
+						rel, err := url.Parse(attr.Val)
+						if err == nil {
+							abs := parsedBase.ResolveReference(rel)
+							links = append(links, abs.String())
+						}
+					}
+				}
+			}
+		}
+	}
+	return links, nil
+}
+
+func main() {
+	htmlData := `<p>Kunjungi <a href="/products">Katalog</a> kami.</p>`
+	links, _ := ExtractLinks("https://store.com/", htmlData)
+	for _, l := range links {
+		fmt.Println("Extracted link:", l)
+	}
+}

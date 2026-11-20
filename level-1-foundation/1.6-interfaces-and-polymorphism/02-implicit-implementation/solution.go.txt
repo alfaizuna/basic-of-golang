@@ -1,0 +1,43 @@
+package main
+
+import "fmt"
+
+type Notifier interface {
+	Notify(message string) string
+}
+
+type EmailSender struct {
+	Email string
+}
+
+func (e EmailSender) Notify(message string) string {
+	return "[EMAIL to " + e.Email + "] " + message
+}
+
+type SMSSender struct {
+	Phone string
+}
+
+func (s SMSSender) Notify(message string) string {
+	return "[SMS to " + s.Phone + "] " + message
+}
+
+func BroadcastAlert(notifiers []Notifier, alertMessage string) []string {
+	var results []string
+	for _, n := range notifiers {
+		results = append(results, n.Notify(alertMessage))
+	}
+	return results
+}
+
+func main() {
+	channels := []Notifier{
+		EmailSender{Email: "user@example.com"},
+		SMSSender{Phone: "+62812345678"},
+	}
+
+	messages := BroadcastAlert(channels, "Server down!")
+	for i, msg := range messages {
+		fmt.Printf("Notification %d: %s\n", i+1, msg)
+	}
+}

@@ -1,0 +1,102 @@
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+type Fetcher interface {
+	Fetch(url string) (string, []string, error)
+}
+
+type CrawlReport struct {
+	mu          sync.Mutex
+	SuccessURLs []string
+	FailedURLs  map[string]string
+}
+
+func NewCrawlReport() *CrawlReport {
+	return &CrawlReport{
+		FailedURLs: make(map[string]string),
+	}
+}
+
+func (r *CrawlReport) AddSuccess(url string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.SuccessURLs = append(r.SuccessURLs, url)
+}
+
+func (r *CrawlReport) AddFailure(url string, errMsg string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.FailedURLs[url] = errMsg
+}
+
+type crawlerEngine struct {
+	fetcher  Fetcher
+	report   *CrawlReport
+	visited  map[string]bool
+	mu       sync.Mutex
+	wg       sync.WaitGroup
+	maxDepth int
+}
+
+func (c *crawlerEngine) crawl(url string, depth int) {
+	defer c.wg.Done()
+	if depth > c.maxDepth {
+		return
+	}
+
+	c.mu.Lock()
+	if c.visited[url] {
+		c.mu.Unlock()
+		return
+	}
+	c.visited[url] = true
+	c.mu.Unlock()
+
+	_, urls, err := c.fetcher.Fetch(url)
+	if err != nil {
+		c.report.AddFailure(url, err.Error())
+		return
+	}
+	c.report.AddSuccess(url)
+
+	for _, u := range urls {
+		c.wg.Add(1)
+		go c.crawl(u, depth+1)
+	}
+}
+
+func RunCrawler(startURL string, maxDepth int, fetcher Fetcher) *CrawlReport {
+	engine := &crawlerEngine{
+		fetcher:  fetcher,
+		report:   NewCrawlReport(),
+		visited:  make(map[string]bool),
+		maxDepth: maxDepth,
+	}
+
+	engine.wg.Add(1)
+	go engine.crawl(startURL, 1)
+	engine.wg.Wait()
+
+	return engine.report
+}
+
+type mockFetcher struct{}
+
+func (m *mockFetcher) Fetch(url string) (string, []string, error) {
+	if url == "https://store.local" {
+		return "home", []string{"https://store.local/products"}, nil
+	}
+	if url == "https://store.local/products" {
+		return "products", nil, nil
+	}
+	return "", nil, fmt.Errorf("404 not found")
+}
+
+func main() {
+	report := RunCrawler("https://store.local", 2, &mockFetcher{})
+	fmt.Printf("Crawled successfully: %d pages\n", len(report.SuccessURLs))
+}

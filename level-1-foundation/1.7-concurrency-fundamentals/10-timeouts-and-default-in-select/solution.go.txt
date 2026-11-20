@@ -1,0 +1,28 @@
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+// FetchWithTimeout mengambil pesan dari channel dengan batas waktu tertentu.
+func FetchWithTimeout(ch <-chan string, timeout time.Duration) (string, error) {
+	select {
+	case res := <-ch:
+		return res, nil
+	case <-time.After(timeout):
+		return "", fmt.Errorf("operation timed out")
+	}
+}
+
+func main() {
+	ch := make(chan string, 1)
+	ch <- "Success!"
+
+	res, err := FetchWithTimeout(ch, 100*time.Millisecond)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Result: %s\n", res)
+}

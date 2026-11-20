@@ -1,0 +1,106 @@
+package main
+
+import "fmt"
+
+type RecordType string
+
+const (
+	TypeA     RecordType = "A"
+	TypeCNAME RecordType = "CNAME"
+)
+
+type Record struct {
+	Name  string
+	Type  RecordType
+	Value string
+	TTL   int
+}
+
+func NewRecord(name string, recordType RecordType, value string, ttl int) *Record {
+	return &Record{
+		Name:  name,
+		Type:  recordType,
+		Value: value,
+		TTL:   ttl,
+	}
+}
+
+type Zone struct {
+	Name    string
+	records map[string][]*Record
+}
+
+func NewZone(name string) *Zone {
+	return &Zone{
+		Name:    name,
+		records: make(map[string][]*Record),
+	}
+}
+
+func (z *Zone) AddRecord(rec *Record) {
+	if z == nil || rec == nil {
+		return
+	}
+	z.records[rec.Name] = append(z.records[rec.Name], rec)
+}
+
+func (z *Zone) Lookup(name string, recordType RecordType) *Record {
+	if z == nil || z.records == nil {
+		return nil
+	}
+	for _, r := range z.records[name] {
+		if r.Type == recordType {
+			return r
+		}
+	}
+	return nil
+}
+
+func (z *Zone) RecordCount() int {
+	if z == nil || z.records == nil {
+		return 0
+	}
+	total := 0
+	for _, recs := range z.records {
+		total += len(recs)
+	}
+	return total
+}
+
+func (z *Zone) Transfer() *Zone {
+	if z == nil {
+		return nil
+	}
+	target := NewZone(z.Name)
+	for _, recs := range z.records {
+		for _, r := range recs {
+			copiedRec := &Record{
+				Name:  r.Name,
+				Type:  r.Type,
+				Value: r.Value,
+				TTL:   r.TTL,
+			}
+			target.AddRecord(copiedRec)
+		}
+	}
+	return target
+}
+
+func main() {
+	primary := NewZone("example.com")
+	r1 := NewRecord("example.com", TypeA, "93.184.216.34", 300)
+	r2 := NewRecord("www.example.com", TypeCNAME, "example.com", 3600)
+	primary.AddRecord(r1)
+	primary.AddRecord(r2)
+
+	replica := primary.Transfer()
+
+	if replica != nil {
+		fmt.Printf("Primary zone count: %d\n", primary.RecordCount())
+		fmt.Printf("Replica zone count: %d\n", replica.RecordCount())
+
+		repRec := replica.Lookup("example.com", TypeA)
+		isIndependent := repRec != nil && repRec != r1 && repRec.Value == r1.Value
+		fmt.Printf("Independent memory confirmed: %t\n", isIndependent)
+	}
+}

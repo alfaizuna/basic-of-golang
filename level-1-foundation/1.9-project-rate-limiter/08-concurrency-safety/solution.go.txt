@@ -1,0 +1,52 @@
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+type SafeRateLimiter struct {
+	mu     sync.Mutex
+	limit  int
+	counts map[string]int
+}
+
+func NewSafeRateLimiter(limit int) *SafeRateLimiter {
+	return &SafeRateLimiter{
+		limit:  limit,
+		counts: make(map[string]int),
+	}
+}
+
+func (s *SafeRateLimiter) Allow(key string) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if s.counts[key] < s.limit {
+		s.counts[key]++
+		return true
+	}
+	return false
+}
+
+func (s *SafeRateLimiter) GetCount(key string) int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.counts[key]
+}
+
+func main() {
+	limiter := NewSafeRateLimiter(10)
+	var wg sync.WaitGroup
+
+	for i := 0; i < 20; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			limiter.Allow("client-1")
+		}()
+	}
+
+	wg.Wait()
+	fmt.Printf("Total allowed for client-1: %d\n", limiter.GetCount("client-1"))
+}

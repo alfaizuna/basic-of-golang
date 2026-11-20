@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+func SafeFirst(items []int) (int, bool) {
+	if len(items) == 0 {
+		return 0, false
+	}
+	return items[0], true
+}
+
+func main() {
+	val, ok := SafeFirst([]int{10, 20})
+	fmt.Printf("First: %d, OK: %t\n", val, ok)
+}

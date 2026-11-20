@@ -1,0 +1,19 @@
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func SaveReport(filename string, content string) error {
+	return os.WriteFile(filename, []byte(content), 0644)
+}
+
+func main() {
+	err := SaveReport("report.txt", "Status: Normal\nThroughput: 500 req/s")
+	if err != nil {
+		fmt.Println("Gagal menyimpan:", err)
+		return
+	}
+	fmt.Println("Report saved successfully")
+}

@@ -1,0 +1,50 @@
+package main
+
+import "fmt"
+
+type Row struct {
+	ID       string  `yaml:"id"`
+	Item     string  `yaml:"item"`
+	Category string  `yaml:"category"`
+	Price    float64 `yaml:"price"`
+	Quantity int     `yaml:"quantity"`
+	Total    float64 `yaml:"total"`
+}
+
+type Predicate func(Row) bool
+
+func Filter(rows []Row, predicate Predicate) []Row {
+	var filtered []Row
+	for _, r := range rows {
+		if predicate(r) {
+			filtered = append(filtered, r)
+		}
+	}
+	return filtered
+}
+
+func FilterByCategory(rows []Row, category string) []Row {
+	return Filter(rows, func(r Row) bool {
+		return r.Category == category
+	})
+}
+
+func FilterMinTotal(rows []Row, minTotal float64) []Row {
+	return Filter(rows, func(r Row) bool {
+		return r.Total >= minTotal
+	})
+}
+
+func main() {
+	sampleRows := []Row{
+		{ID: "TX-101", Item: "Laptop", Category: "electronics", Total: 2400.00},
+		{ID: "TX-102", Item: "Desk", Category: "furniture", Total: 450.00},
+		{ID: "TX-103", Item: "Monitor", Category: "electronics", Total: 600.00},
+	}
+
+	electronics := FilterByCategory(sampleRows, "electronics")
+	fmt.Printf("Filtered category 'electronics': %d rows\n", len(electronics))
+
+	highValue := FilterMinTotal(sampleRows, 500.00)
+	fmt.Printf("Filtered min total $500: %d rows\n", len(highValue))
+}

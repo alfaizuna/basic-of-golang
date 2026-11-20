@@ -1,0 +1,48 @@
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+type Row struct {
+	ID       string  `yaml:"id"`
+	Item     string  `yaml:"item"`
+	Category string  `yaml:"category"`
+	Price    float64 `yaml:"price"`
+	Quantity int     `yaml:"quantity"`
+	Total    float64 `yaml:"total"`
+}
+
+func CalculateTotals(rows []Row) []Row {
+	res := make([]Row, len(rows))
+	copy(res, rows)
+	for i := range res {
+		res[i].Total = res[i].Price * float64(res[i].Quantity)
+	}
+	return res
+}
+
+func NormalizeCategories(rows []Row) []Row {
+	res := make([]Row, len(rows))
+	copy(res, rows)
+	for i := range res {
+		res[i].Category = strings.ToLower(strings.TrimSpace(res[i].Category))
+	}
+	return res
+}
+
+func main() {
+	rawRows := []Row{
+		{ID: "TX-101", Item: "Laptop", Category: "  ELECTRONICS ", Price: 1200.00, Quantity: 2},
+		{ID: "TX-102", Item: "Desk", Category: "Furniture  ", Price: 450.00, Quantity: 1},
+	}
+
+	normalized := NormalizeCategories(rawRows)
+	calculated := CalculateTotals(normalized)
+
+	for _, r := range calculated {
+		fmt.Printf("Transformed: %s | %s | %s | Total: $%.2f\n",
+			r.ID, r.Item, r.Category, r.Total)
+	}
+}

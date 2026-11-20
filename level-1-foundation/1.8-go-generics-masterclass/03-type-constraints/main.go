@@ -1,0 +1,15 @@
+package main
+
+import "fmt"
+
+// Contains mengecek apakah target terdapat di dalam slice items.
+func Contains[T comparable](items []T, target T) bool {
+	// TODO: Periksa apakah target ada di slice items menggunakan operator ==
+	return false
+}
+
+func main() {
+	numbers := []int{10, 20, 30}
+	fmt.Printf("Contains 20: %t\n", Contains(numbers, 20))
+	fmt.Printf("Contains 99: %t\n", Contains(numbers, 99))
+}

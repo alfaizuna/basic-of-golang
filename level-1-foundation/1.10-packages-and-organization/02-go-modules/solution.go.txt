@@ -1,0 +1,12 @@
+package main
+
+import "fmt"
+
+func FormatModuleHeader(modulePath, goVersion string) string {
+	return fmt.Sprintf("module %s\n\ngo %s", modulePath, goVersion)
+}
+
+func main() {
+	header := FormatModuleHeader("github.com/user/myapp", "1.23")
+	fmt.Println(header)
+}
